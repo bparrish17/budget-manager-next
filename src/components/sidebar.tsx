@@ -14,9 +14,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LogOut } from "lucide-react";
 
-export function AppSidebar() {
+import { auth, signOut } from "@/auth";
+import { Button } from "./ui/button";
+
+export async function AppSidebar() {
+  const session = await auth();
+  console.log("session", session);
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -45,7 +51,18 @@ export function AppSidebar() {
         <SidebarGroup />
         <SidebarGroup />
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter>
+        <Button
+          variant="outline"
+          onClick={async () => {
+            "use server";
+            await signOut({ redirectTo: "/login" });
+          }}
+        >
+          Sign Out
+          <LogOut />
+        </Button>
+      </SidebarFooter>
     </Sidebar>
   );
 }

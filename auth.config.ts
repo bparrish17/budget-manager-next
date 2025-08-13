@@ -6,15 +6,14 @@ export const authConfig = {
     // newUser: '/register'
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      console.log("nextURL", nextUrl);
+    authorized: ({ auth, request: { nextUrl } }) => {
       const isLoggedIn = !!auth?.user;
-      const isNotOnLogin = !nextUrl.pathname.startsWith("/login");
-      if (isNotOnLogin) {
+      const isHome = nextUrl.pathname.startsWith("/home");
+      if (isHome) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        return Response.redirect(new URL("/", nextUrl));
+        return Response.redirect(new URL("/home", nextUrl));
       }
       return true;
     },

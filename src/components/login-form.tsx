@@ -21,7 +21,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams.get("callbackUrl") || "/home";
   const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
     undefined
