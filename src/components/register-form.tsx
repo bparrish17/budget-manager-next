@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ShieldAlert } from "lucide-react";
-import { register } from "@/lib/actions/user.actions";
+import { register, RegisterFormState } from "@/lib/actions/user.actions";
 
 export function RegisterForm({
   className,
@@ -22,10 +22,10 @@ export function RegisterForm({
 }: React.ComponentProps<"div">) {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
-  const [errorMessage, formAction, isPending] = useActionState(
-    register,
-    undefined
-  );
+  const [state, formAction, isPending] = useActionState(register, {
+    message: null,
+    errors: {},
+  } as RegisterFormState);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -39,23 +39,39 @@ export function RegisterForm({
         <CardContent>
           <form action={formAction}>
             <div className="flex flex-col gap-6">
-              <div className="grid gap-3">
+              <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  name='email'
+                  name="email"
                   type="email"
                   placeholder="m@example.com"
                   required
+                  aria-describedby="email-error"
                 />
+                <FieldError state={state} fieldName="email" />
               </div>
-              <div className="grid gap-3">
+              <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" name='password' type="password" required />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  aria-describedby="password-error"
+                />
+                <FieldError state={state} fieldName="password" />
               </div>
-              <div className="grid gap-3">
+              <div className="grid gap-2">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input id="confirmPassword" name='confirmPassword' type="password" required />
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  required
+                  aria-describedby="confirmPassword-error"
+                />
+                <FieldError state={state} fieldName="confirmPassword" />
               </div>
               <div className="flex flex-col gap-3">
                 <Button
@@ -70,10 +86,10 @@ export function RegisterForm({
                 </Button> */}
               </div>
             </div>
-            {errorMessage && (
+            {state.message && (
               <div className="flex justify-center gap-1 mt-5">
                 <ShieldAlert className="h-5 w-5 text-red-500" />
-                <p className="text-sm text-red-500">{errorMessage}</p>
+                <p className="text-sm text-red-500">{state.message}</p>
               </div>
             )}
           </form>
@@ -81,6 +97,26 @@ export function RegisterForm({
       </Card>
     </div>
   );
+}
+
+function FieldError({
+  fieldName,
+  state,
+}: {
+  fieldName: "email" | "password" | "confirmPassword";
+  state: RegisterFormState;
+}) {
+  if (state?.errors?.[fieldName]) {
+    return (
+      <div id={`${fieldName}-error`} aria-live="polite" aria-atomic="true">
+        {state.errors[fieldName].map((error: string) => (
+          <p className="text-sm text-red-500" key={error}>
+            {error}
+          </p>
+        ))}
+      </div>
+    );
+  }
 }
 
 /*

@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useActionState } from 'react';
-import { authenticate } from '@/lib/actions/user.actions';
-import { useSearchParams } from 'next/navigation';
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useActionState } from "react";
+import { authenticate } from "@/lib/actions/user.actions";
+import { useSearchParams } from "next/navigation";
 import { ShieldAlert } from "lucide-react";
 
 export function LoginForm({
@@ -21,10 +21,10 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/';
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
-    undefined,
+    undefined
   );
 
   return (
@@ -43,6 +43,7 @@ export function LoginForm({
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="m@example.com"
                   required
@@ -58,10 +59,15 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" name="password" type="password" required />
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full" aria-disabled={isPending}>
+                <input type="hidden" name="redirectTo" value={callbackUrl} />
+                <Button
+                  type="submit"
+                  className="w-full"
+                  aria-disabled={isPending}
+                >
                   Login
                 </Button>
                 {/* <Button variant="outline" className="w-full">
@@ -85,5 +91,5 @@ export function LoginForm({
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
