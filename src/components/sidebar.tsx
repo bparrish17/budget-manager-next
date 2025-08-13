@@ -14,14 +14,50 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, LogOut } from "lucide-react";
+import {
+  ChevronDown,
+  LogOut,
+  ChartColumnBig,
+  BadgeDollarSign,
+  BanknoteArrowDown,
+  LayoutDashboard,
+  Goal,
+} from "lucide-react";
 
 import { auth, signOut } from "@/auth";
 import { Button } from "./ui/button";
+import Link from "next/link";
+
+const items = [
+  {
+    title: "Dashboard",
+    url: "/home/2025/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "Expenses",
+    url: "/home/2025/expenses",
+    icon: BanknoteArrowDown,
+  },
+  {
+    title: "Income",
+    url: "/home/2025/income",
+    icon: BadgeDollarSign,
+  },
+  {
+    title: "Investments",
+    url: "/home/2025/investments",
+    icon: ChartColumnBig,
+  },
+  // {
+  //   title: "Goals",
+  //   url: "#",
+  //   icon: Goal,
+  // },
+];
 
 export async function AppSidebar() {
   const session = await auth();
-  console.log("session", session);
 
   return (
     <Sidebar>
@@ -48,8 +84,20 @@ export async function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup />
-        <SidebarGroup />
+        <SidebarGroup>
+          <SidebarMenu>
+            {items.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <Link href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <Button
