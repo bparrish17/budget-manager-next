@@ -1,25 +1,10 @@
-import type { User } from "@/lib/definitions";
-import postgres from "postgres";
-import db, { UserSchema } from "@/db";
+import db from "@/db";
+import { users as Users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
-
-export async function getUser(email: string): Promise<User | undefined> {
+export async function createUser(email: string) {
   try {
-    const user = await sql<User[]>`SELECT * FROM users WHERE email=${email}`;
-    return user[0];
-  } catch (error) {
-    console.error("Failed to fetch user:", error);
-    throw new Error("Failed to fetch user.");
-  }
-}
-
-export async function createUser(email: string, passwordHashed: string) {
-  try {
-    await sql`
-      INSERT INTO users (email, password)
-      VALUES (${email}, ${passwordHashed})
-    `;
+    await db.insert(Users).values({ email, password: "hello world" });
   } catch (error) {
     console.error("Failed to fetch user:", error);
     throw new Error("Failed to fetch user.");
@@ -27,11 +12,13 @@ export async function createUser(email: string, passwordHashed: string) {
 }
 
 export async function searchUsers() {
-  try {
-    const users = await db.select().from(UserSchema);
-    return users;
-  } catch (error) {
-    console.error("Failed to fetch users:", error);
-    throw new Error("Failed to fetch user.");
-  }
+  return db.select().from(Users);
+}
+
+export async function getUserByEmail(email: string) {
+  return db.query.users.findFirst({ where: eq(Users.email, email) });
+}
+
+export async function getUserById(id: string) {
+  return db.query.users.findFirst({ where: eq(Users.id, id) });
 }

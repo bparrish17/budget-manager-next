@@ -3,7 +3,7 @@ import { authConfig } from "../auth.config";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { getUser } from "@/services/user.service";
+import { getUserByEmail } from "@/services/user.service";
 
 const signInSchema = z.object({
   email: z
@@ -31,7 +31,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
           if (parsedCredentials.success) {
             const { email, password } = parsedCredentials.data;
-            const user = await getUser(email);
+            const user = await getUserByEmail(email);
             if (!user) return null;
             const passwordsMatch = await bcrypt.compare(
               password,

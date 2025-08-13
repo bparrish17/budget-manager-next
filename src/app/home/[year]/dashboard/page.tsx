@@ -1,7 +1,7 @@
-import { fetchUsers } from "@/services/user.service";
+import { searchUsers } from "@/services/user.service";
 
 export default async function Dashboard() {
-  const users = await fetchUsers();
+  const users = await searchUsers();
   console.log("users", users);
 
   return (
