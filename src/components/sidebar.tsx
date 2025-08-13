@@ -21,6 +21,7 @@ import {
   BadgeDollarSign,
   BanknoteArrowDown,
   LayoutDashboard,
+  Folders,
   // Goal,
 } from "lucide-react";
 
@@ -49,16 +50,16 @@ const items = [
     url: "/home/2025/investments",
     icon: ChartColumnBig,
   },
-  // {
-  //   title: "Goals",
-  //   url: "#",
-  //   icon: Goal,
-  // },
+  {
+    title: "Categories",
+    url: "/home/categories",
+    icon: Folders,
+  },
 ];
 
 export async function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
