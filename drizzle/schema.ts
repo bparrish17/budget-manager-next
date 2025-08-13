@@ -1,0 +1,138 @@
+import {
+  pgTable,
+  unique,
+  uuid,
+  timestamp,
+  text,
+  foreignKey,
+  bigint,
+  date,
+  pgEnum,
+} from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+
+export const accountType = pgEnum("account_type", [
+  "credit",
+  "debit",
+  "checking",
+  "savings",
+  "brokerage",
+  "traditional_ira",
+  "roth_ira",
+  "money_market",
+  "certificate_of_deposit",
+]);
+
+export const users = pgTable(
+  "users",
+  {
+    id: uuid().defaultRandom().primaryKey().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    name: text(),
+    email: text().notNull(),
+    password: text().notNull(),
+  },
+  (table) => [unique("users_email_key").on(table.email)]
+);
+
+export const categories = pgTable(
+  "categories",
+  {
+    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
+    id: bigint({ mode: "number" })
+      .primaryKey()
+      .generatedByDefaultAsIdentity({
+        name: "category_id_seq",
+        startWith: 1,
+        increment: 1,
+        minValue: 1,
+        maxValue: 9223372036854775807,
+        cache: 1,
+      }),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    title: text(),
+    color: text(),
+    description: text(),
+    userId: uuid("user_id"),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "categories_user_id_fkey",
+    }).onDelete("cascade"),
+    unique("category_id_key").on(table.id),
+  ]
+);
+
+export const transactions = pgTable(
+  "transactions",
+  {
+    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
+    id: bigint({ mode: "number" })
+      .primaryKey()
+      .generatedByDefaultAsIdentity({
+        name: "transactions_id_seq",
+        startWith: 1,
+        increment: 1,
+        minValue: 1,
+        maxValue: 9223372036854775807,
+        cache: 1,
+      }),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    title: text(),
+    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
+    amount: bigint({ mode: "number" }),
+    date: date(),
+    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
+    categoryId: bigint("category_id", { mode: "number" }),
+    userId: uuid("user_id"),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.categoryId],
+      foreignColumns: [categories.id],
+      name: "transactions_category_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("set default"),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "transactions_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    unique("transactions_id_key").on(table.id),
+  ]
+);
+
+export const accounts = pgTable(
+  "accounts",
+  {
+    // You can use { mode: "bigint" } if numbers are exceeding js number limitations
+    id: bigint({ mode: "number" })
+      .primaryKey()
+      .generatedByDefaultAsIdentity({
+        name: "accounts_id_seq",
+        startWith: 1,
+        increment: 1,
+        minValue: 1,
+        maxValue: 9223372036854775807,
+        cache: 1,
+      }),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .defaultNow()
+      .notNull(),
+    title: text(),
+    description: text(),
+    type: accountType(),
+  },
+  (table) => [unique("accounts_id_key").on(table.id)]
+);
