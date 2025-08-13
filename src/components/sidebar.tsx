@@ -21,10 +21,10 @@ import {
   BadgeDollarSign,
   BanknoteArrowDown,
   LayoutDashboard,
-  Goal,
+  // Goal,
 } from "lucide-react";
 
-import { auth, signOut } from "@/auth";
+import { signOut } from "@/auth";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
@@ -57,8 +57,6 @@ const items = [
 ];
 
 export async function AppSidebar() {
-  const session = await auth();
-
   return (
     <Sidebar>
       <SidebarHeader>
