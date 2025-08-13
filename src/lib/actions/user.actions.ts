@@ -84,7 +84,7 @@ export async function register(
     await bcrypt.hash(password, 10, async (_err, hash) => {
       await createUser(email, hash);
     });
-  } catch (e: any) {
+  } catch (e: unknown) {
     return { message: "Something went wrong" };
   }
 
