@@ -22,6 +22,7 @@ import {
   BanknoteArrowDown,
   LayoutDashboard,
   Folders,
+  Settings,
   // Goal,
 } from "lucide-react";
 
@@ -51,9 +52,9 @@ const items = [
     icon: ChartColumnBig,
   },
   {
-    title: "Categories",
-    url: "/home/categories",
-    icon: Folders,
+    title: "Settings",
+    url: "/home/settings",
+    icon: Settings,
   },
 ];
 
