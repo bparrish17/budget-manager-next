@@ -2,13 +2,8 @@ import db from "@/db";
 import { users as Users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-export async function createUser(email: string) {
-  try {
-    await db.insert(Users).values({ email, password: "hello world" });
-  } catch (error) {
-    console.error("Failed to fetch user:", error);
-    throw new Error("Failed to fetch user.");
-  }
+export async function createUser(email: string, passwordHash: string) {
+  return db.insert(Users).values({ email, password: passwordHash });
 }
 
 export async function searchUsers() {

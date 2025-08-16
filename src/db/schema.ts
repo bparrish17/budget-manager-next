@@ -42,7 +42,14 @@ export const transactions = pgTable("transactions", {
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	categoryId: bigint("category_id", { mode: "number" }),
 	userId: uuid("user_id"),
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	accountId: bigint("account_id", { mode: "number" }),
 }, (table) => [
+	foreignKey({
+			columns: [table.accountId],
+			foreignColumns: [accounts.id],
+			name: "transactions_account_id_fkey"
+		}).onDelete("set null"),
 	foreignKey({
 			columns: [table.categoryId],
 			foreignColumns: [categories.id],
@@ -60,9 +67,10 @@ export const accounts = pgTable("accounts", {
 	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 	id: bigint({ mode: "number" }).primaryKey().generatedByDefaultAsIdentity({ name: "accounts_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 9223372036854775807, cache: 1 }),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	title: text(),
 	description: text(),
 	type: accountType(),
+	institutionName: text("institution_name"),
+	institutionNameAbbr: text("institution_name_abbr"),
 }, (table) => [
 	unique("accounts_id_key").on(table.id),
 ]);

@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 
 import { signIn } from "@/auth";
-import { createUser, getUser } from "@/services/user.service";
+import { createUser, getUserByEmail } from "@/services/user.service";
 
 const registerSchema = z.object({
   email: z
@@ -77,7 +77,7 @@ export async function register(
 
     const { email, password } = validatedFields.data;
 
-    const user = await getUser(email);
+    const user = await getUserByEmail(email);
     if (user) {
       return { message: `User with email ${email} already exists.` };
     }
