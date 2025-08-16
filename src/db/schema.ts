@@ -2,6 +2,7 @@ import { pgTable, unique, uuid, timestamp, text, foreignKey, bigint, date, pgEnu
 import { sql } from "drizzle-orm"
 
 export const accountType = pgEnum("account_type", ['credit', 'debit', 'checking', 'savings', 'brokerage', 'traditional_ira', 'roth_ira', 'money_market', 'certificate_of_deposit'])
+export const color = pgEnum("color", ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose', 'gray', 'black'])
 
 
 export const users = pgTable("users", {
@@ -19,7 +20,7 @@ export const categories = pgTable("categories", {
 	id: bigint({ mode: "number" }).primaryKey().generatedByDefaultAsIdentity({ name: "category_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 9223372036854775807, cache: 1 }),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	title: text(),
-	color: text(),
+	color: color(),
 	description: text(),
 	userId: uuid("user_id"),
 }, (table) => [
