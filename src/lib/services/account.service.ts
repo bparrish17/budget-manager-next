@@ -1,6 +1,8 @@
+"use server";
+
 import db from "@/db";
 import { accounts } from "@/db/schema";
 
-export function fetchAccounts() {
+export async function fetchAccounts() {
   return db.select().from(accounts);
 }

@@ -1,4 +1,4 @@
-import { searchTransactions } from "@/services/transaction.service";
+import { searchTransactions } from "@/lib/services/transaction.service";
 
 export default async function Dashboard() {
   return (

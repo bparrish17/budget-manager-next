@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 
 import { signIn } from "@/auth";
-import { createUser, getUserByEmail } from "@/services/user.service";
+import { createUser, getUserByEmail } from "@/lib/services/user.service";
 
 const registerSchema = z.object({
   email: z

@@ -1,8 +1,10 @@
+"use server";
+
 import db from "@/db";
 import { transactions } from "@/db/schema";
 import { gt, lt } from "drizzle-orm";
 
-export function searchTransactions() {
+export async function searchTransactions() {
   return db.query.transactions.findMany({
     with: {
       category: true,
@@ -10,7 +12,7 @@ export function searchTransactions() {
   });
 }
 
-export function searchExpenses() {
+export async function searchExpenses() {
   return db.query.transactions.findMany({
     with: {
       category: true,
@@ -19,7 +21,7 @@ export function searchExpenses() {
   });
 }
 
-export function searchIncome() {
+export async function searchIncome() {
   return db.query.transactions.findMany({
     with: {
       category: true,

@@ -1,4 +1,4 @@
-import { searchIncome } from "@/services/transaction.service";
+import { searchIncome } from "@/lib/services/transaction.service";
 
 export default async function Income() {
   const income = await searchIncome();
