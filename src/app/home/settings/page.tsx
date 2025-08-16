@@ -3,6 +3,7 @@ import { Separator } from "@/components/ui/separator";
 import { fetchAccounts } from "@/services/account.service";
 import { fetchCategories } from "@/services/category.service";
 import { Plus } from "lucide-react";
+import { CreateCategoryFormDialog } from "./_components/create-category-form-dialog.component";
 
 const colorMap: { [color: string]: string } = {
   red: "bg-red-400",
@@ -34,9 +35,6 @@ export default async function Settings() {
   const categories = await fetchCategories();
   const accounts = await fetchAccounts();
 
-  console.log("categories", categories);
-  console.log("accounts", accounts);
-
   return (
     <div className="flex flex-col gap-4 w-full px-8 pt-6 items-center sm:items-start">
       <h4 className="text-2xl">Settings</h4>
@@ -65,10 +63,7 @@ export default async function Settings() {
             </div>
           ))}
         </div>
-        <Button variant="outline" className="py-4 min-w-40 mt-8 shadow-sm">
-          <Plus />
-          Add Category
-        </Button>
+        <CreateCategoryFormDialog />
       </div>
 
       <Separator />
