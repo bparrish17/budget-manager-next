@@ -38,7 +38,7 @@ import { createCategory } from "@/lib/services/category.service";
 
 const colorOptions = ColorSchema.enumValues;
 
-const createCategorySchema = z.object({
+const categoryFormSchema = z.object({
   title: z.string().min(1, {
     message: "Title is required.",
   }),
@@ -46,7 +46,7 @@ const createCategorySchema = z.object({
   description: z.string().optional(),
 });
 
-type CategoryFormSchema = z.infer<typeof createCategorySchema>;
+type CategoryFormSchema = z.infer<typeof categoryFormSchema>;
 interface CategoryFormDialogProps {
   categories: (typeof CategoriesSchema.$inferSelect)[];
 }
@@ -54,7 +54,7 @@ interface CategoryFormDialogProps {
 export function CategoryFormDialog({ categories }: CategoryFormDialogProps) {
   const [open, setOpen] = useState<boolean>(false);
   const form = useForm<CategoryFormSchema>({
-    resolver: zodResolver(createCategorySchema),
+    resolver: zodResolver(categoryFormSchema),
     defaultValues: {
       title: "",
     },

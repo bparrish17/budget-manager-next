@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import { fetchAccounts } from "@/lib/services/account.service";
 import { fetchCategories } from "@/lib/services/category.service";
-import { CategoryFormDialog } from "@/components/create-category-form-dialog";
+import { CategoryFormDialog } from "@/components/category-form-dialog";
 import { categoryColorMap } from "@/lib/constants";
 import { map } from "lodash";
 import { Button } from "@/components/ui/button";
@@ -34,7 +34,7 @@ export default async function Settings() {
         <p className="text-muted-foreground text-sm">
           Categories help you understand where your income and expenses are going to.
         </p>
-        <div className="flex gap-6 flex-wrap mt-4">
+        <div className="flex flex-wrap mt-4">
           {categories.map((category) => (
             <Category key={category.id} category={category} />
           ))}
