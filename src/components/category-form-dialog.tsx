@@ -1,11 +1,11 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { Plus } from "lucide-react";
+import React, { useState } from "react";
 import { capitalize, map } from "lodash";
+import { createInsertSchema, createUpdateSchema } from "drizzle-zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,38 +31,68 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { categories as CategoriesSchema, color as ColorSchema } from "@/db/schema";
+import { categories, color as ColorSchema } from "@/db/schema";
 import { categoryColorMap } from "@/lib/constants";
 import { Textarea } from "@/components/ui/textarea";
-import { createCategory } from "@/lib/services/category.service";
+import {
+  createCategory,
+  updateCategory,
+  TInsertCategory,
+  TSelectCategory,
+  TUpdateCategory,
+} from "@/lib/services/category.service";
+
+export const CreateCategorySchema = createInsertSchema(categories, {
+  title: (schema) => schema.min(1, "Title is required"),
+  color: z.enum(ColorSchema.enumValues),
+  description: (schema) => schema.nullable(),
+});
+export const UpdateCategorySchema = createUpdateSchema(categories, {
+  title: (schema) => schema.min(1, "Title is required"),
+  color: z.enum(ColorSchema.enumValues),
+  description: (schema) => schema.nullable(),
+});
+
+export type TUpdateCategorySchema = Omit<
+  z.infer<typeof UpdateCategorySchema>,
+  "createdAt" | "userId"
+>;
+export type TCreateCategorySchema = Omit<
+  z.infer<typeof CreateCategorySchema>,
+  "id" | "createdAt" | "userId"
+>;
 
 const colorOptions = ColorSchema.enumValues;
 
-const categoryFormSchema = z.object({
-  title: z.string().min(1, {
-    message: "Title is required.",
-  }),
-  color: z.enum(colorOptions),
-  description: z.string().optional(),
-});
+type TCreateUpdateCategory = TCreateCategorySchema | TUpdateCategorySchema;
+type TCategoryFormDialogProps = {
+  title: string;
+  type: "create" | "update";
+  categoryId?: number;
+  defaultValues: Partial<TCreateUpdateCategory>;
+  children: React.ReactNode;
+  categories: TSelectCategory[];
+  onConfirm?: () => void;
+};
 
-type CategoryFormSchema = z.infer<typeof categoryFormSchema>;
-interface CategoryFormDialogProps {
-  categories: (typeof CategoriesSchema.$inferSelect)[];
-}
-
-export function CategoryFormDialog({ categories }: CategoryFormDialogProps) {
+export function CategoryFormDialog({
+  title,
+  type,
+  categoryId,
+  defaultValues,
+  children,
+  categories,
+  onConfirm,
+}: TCategoryFormDialogProps) {
   const [open, setOpen] = useState<boolean>(false);
-  const form = useForm<CategoryFormSchema>({
-    resolver: zodResolver(categoryFormSchema),
-    defaultValues: {
-      title: "",
-    },
+  const form = useForm<TCreateUpdateCategory>({
+    resolver: zodResolver(type === "update" ? UpdateCategorySchema : CreateCategorySchema),
+    defaultValues,
   });
 
-  const onSubmit = async (values: CategoryFormSchema) => {
+  const onSubmit = async (values: TCreateUpdateCategory) => {
     const existingTitles = new Set(map(categories, ({ title }) => title.toLowerCase()));
-    if (existingTitles.has(values.title.toLowerCase())) {
+    if (existingTitles.has(values.title!.toLowerCase())) {
       form.setError("title", {
         type: "custom",
         message: `Category with title "${values.title}" already exists..`,
@@ -70,26 +100,24 @@ export function CategoryFormDialog({ categories }: CategoryFormDialogProps) {
       return;
     }
 
-    await createCategory(values)
-      .then(() => {
-        setOpen(false);
-      })
-      .catch((e) => {
-        console.log("e", e);
-      });
+    try {
+      if (type === "create") {
+        await createCategory(values as TInsertCategory);
+      } else {
+        await updateCategory({ id: categoryId!, ...values } as TUpdateCategory);
+      }
+      onConfirm && onConfirm();
+    } catch (e) {
+      console.log("e", e);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="py-4 min-w-40 mt-8 shadow-sm">
-          <Plus />
-          Add Category
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="gap-8">
         <DialogHeader>
-          <DialogTitle>Create a new category</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8">
@@ -147,6 +175,7 @@ export function CategoryFormDialog({ categories }: CategoryFormDialogProps) {
                       className="field-sizing-fixed"
                       rows={3}
                       {...field}
+                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage />

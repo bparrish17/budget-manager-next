@@ -6,7 +6,8 @@ import { Edit, TrashIcon } from "lucide-react";
 import { categories } from "@/db/schema";
 import { useState } from "react";
 import { AppAlertDialog } from "./alert-dialog";
-import { deleteCategory } from "@/lib/services/category.service";
+import { deleteCategory, updateCategory } from "@/lib/services/category.service";
+import { CategoryFormDialog, UpdateCategorySchema } from "./category-form-dialog";
 
 export function Category({ category }: { category: typeof categories.$inferSelect }) {
   const [isHovering, setIsHovering] = useState<boolean>();
@@ -17,13 +18,20 @@ export function Category({ category }: { category: typeof categories.$inferSelec
 
   return (
     <div
-      className="p-3"
+      className="flex flex-col gap-2 border rounded-[8px] min-w-40 shadow-sm relative"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <div className={`flex flex-col gap-2 border rounded-[8px] min-w-40 shadow-sm relative`}>
-        {isHovering && (
-          <>
+      {isHovering && (
+        <>
+          <CategoryFormDialog
+            title={`Edit Category "${category.title}"`}
+            type="update"
+            defaultValues={{ ...category, description: category.description ?? "" }}
+            categoryId={category.id}
+            categories={[]}
+            onConfirm={() => setIsHovering(false)}
+          >
             <Button
               variant="outline"
               size="icon"
@@ -31,28 +39,29 @@ export function Category({ category }: { category: typeof categories.$inferSelec
             >
               <Edit size="6" />
             </Button>
-            <AppAlertDialog
-              title="Delete Category?"
-              description="This will remove the category from all of your transactions as well."
-              actionText="Delete Category"
-              onConfirm={handleDeleteClick}
+          </CategoryFormDialog>
+          <AppAlertDialog
+            title="Delete Category?"
+            description="Doing so will remove this category from all of your transactions."
+            actionText="Delete Category"
+            onCancel={() => setIsHovering(false)}
+            onConfirm={handleDeleteClick}
+          >
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute rounded-full size-8 -bottom-3 -right-3 border cursor-pointer"
             >
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute rounded-full size-8 -bottom-3 -right-3 border cursor-pointer"
-              >
-                <TrashIcon size="6" />
-              </Button>
-            </AppAlertDialog>
-          </>
-        )}
-        <div
-          className={`w-full h-3 ${categoryColorMap[category.color ?? "amber"]} rounded-t-[7px]`}
-        />
-        <div className="px-6 pb-3 pt-0 text-center">
-          <span className="text-sm font-semibold">{category.title}</span>
-        </div>
+              <TrashIcon size="6" />
+            </Button>
+          </AppAlertDialog>
+        </>
+      )}
+      <div
+        className={`w-full h-3 ${categoryColorMap[category.color ?? "amber"]} rounded-t-[7px]`}
+      />
+      <div className="px-6 pb-3 pt-0 text-center">
+        <span className="text-sm font-semibold">{category.title}</span>
       </div>
     </div>
   );

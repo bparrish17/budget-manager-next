@@ -17,6 +17,7 @@ interface AppAlertDialogProps {
   title: string;
   description: string;
   actionText: string;
+  onCancel: () => void;
   onConfirm: () => void;
 }
 
@@ -25,16 +26,23 @@ export function AppAlertDialog({
   title,
   description,
   actionText,
+  onCancel,
   onConfirm,
 }: AppAlertDialogProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleCancel = () => {
+    onCancel();
+    setIsOpen(false);
+  };
+
   const handleConfirm = () => {
     onConfirm();
     setIsOpen(false);
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -42,7 +50,7 @@ export function AppAlertDialog({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="mt-2">
-          <Button variant="outline" onClick={() => setIsOpen(false)}>
+          <Button variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
           <Button variant="destructive" onClick={handleConfirm}>
