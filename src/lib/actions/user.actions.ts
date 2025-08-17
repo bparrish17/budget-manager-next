@@ -76,7 +76,7 @@ export async function register(prevState: RegisterFormState, formData: FormData)
     await bcrypt.hash(password, 10, async (_err, hash) => {
       await createUser(email, hash);
     });
-  } catch (e: unknown) {
+  } catch (_e: unknown) {
     return { message: "Something went wrong" };
   }
 

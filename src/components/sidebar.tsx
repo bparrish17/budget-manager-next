@@ -21,7 +21,6 @@ import {
   BadgeDollarSign,
   BanknoteArrowDown,
   LayoutDashboard,
-  Folders,
   Settings,
   // Goal,
 } from "lucide-react";

@@ -2,26 +2,16 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useActionState } from "react";
-import { useSearchParams } from "next/navigation";
 import { ShieldAlert } from "lucide-react";
 import { register, RegisterFormState } from "@/lib/actions/user.actions";
 
-export function RegisterForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+export function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
+  // const searchParams = useSearchParams();
+  // const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [state, formAction, isPending] = useActionState(register, {
     message: null,
     errors: {},
@@ -32,9 +22,7 @@ export function RegisterForm({
       <Card>
         <CardHeader>
           <CardTitle>Create your account</CardTitle>
-          <CardDescription>
-            Enter your email and credentials below.
-          </CardDescription>
+          <CardDescription>Enter your email and credentials below.</CardDescription>
         </CardHeader>
         <CardContent>
           <form action={formAction}>
@@ -74,11 +62,7 @@ export function RegisterForm({
                 <FieldError state={state} fieldName="confirmPassword" />
               </div>
               <div className="flex flex-col gap-3">
-                <Button
-                  type="submit"
-                  className="w-full"
-                  aria-disabled={isPending}
-                >
+                <Button type="submit" className="w-full" aria-disabled={isPending}>
                   Register
                 </Button>
                 {/* <Button variant="outline" className="w-full">

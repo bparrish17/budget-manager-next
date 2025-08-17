@@ -106,7 +106,7 @@ export function CategoryFormDialog({
       } else {
         await updateCategory({ id: categoryId!, ...values } as TUpdateCategory);
       }
-      onConfirm && onConfirm();
+      if (onConfirm) onConfirm();
     } catch (e) {
       console.log("e", e);
     }

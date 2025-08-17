@@ -46,7 +46,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           }
 
           return null;
-        } catch (e) {
+        } catch (_e: unknown) {
           return null;
         }
       },
