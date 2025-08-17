@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -7,15 +9,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
+
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  ChevronDown,
   LogOut,
   ChartColumnBig,
   BadgeDollarSign,
@@ -28,57 +25,68 @@ import {
 import { signOut } from "@/auth";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import YearDropdown from "./year-dropdown";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { onSignOut } from "@/lib/actions/user.actions";
 
 const items = [
   {
     title: "Dashboard",
-    url: "/home/2025/dashboard",
+    url: (selectedYear: string) => `/home/${selectedYear}/dashboard`,
     icon: LayoutDashboard,
   },
   {
     title: "Expenses",
-    url: "/home/2025/expenses",
+    url: (selectedYear: string) => `/home/${selectedYear}/expenses`,
     icon: BanknoteArrowDown,
   },
   {
     title: "Income",
-    url: "/home/2025/income",
+    url: (selectedYear: string) => `/home/${selectedYear}/income`,
     icon: BadgeDollarSign,
   },
   {
     title: "Investments",
-    url: "/home/2025/investments",
+    url: (selectedYear: string) => `/home/${selectedYear}/investments`,
     icon: ChartColumnBig,
   },
   {
     title: "Settings",
-    url: "/home/settings",
+    url: () => `/home/settings`,
     icon: Settings,
   },
 ];
 
-export async function AppSidebar() {
+export function AppSidebar() {
+  const { year: urlParamYear } = useParams<{ year: string }>();
+  const [selectedYear, setSelectedYear] = useState<string>();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (urlParamYear && urlParamYear !== selectedYear) {
+      setSelectedYear(urlParamYear);
+    }
+  }, [urlParamYear, selectedYear]);
+
+  const selectedYearSafe = selectedYear ?? new Date().getFullYear().toString();
+
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  Select Year
-                  <ChevronDown className="ml-auto" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem>
-                  <span>Acme Inc</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Acme Corp.</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <YearDropdown
+              selectedYear={selectedYearSafe}
+              onYearSelect={(year) => {
+                if (pathname.split("/")[3]) {
+                  router.replace(`/home/${year}/${pathname.split("/")[3]}`);
+                } else {
+                  setSelectedYear(year);
+                }
+              }}
+            />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -88,7 +96,7 @@ export async function AppSidebar() {
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <Link href={item.url}>
+                  <Link href={item.url(selectedYearSafe)}>
                     <item.icon />
                     <span>{item.title}</span>
                   </Link>
@@ -99,13 +107,7 @@ export async function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <Button
-          variant="outline"
-          onClick={async () => {
-            "use server";
-            await signOut({ redirectTo: "/login" });
-          }}
-        >
+        <Button variant="outline" onClick={onSignOut}>
           Sign Out
           <LogOut />
         </Button>

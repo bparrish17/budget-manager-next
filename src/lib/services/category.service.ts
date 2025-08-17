@@ -25,6 +25,6 @@ export async function updateCategory(category: TUpdateCategory) {
   revalidatePath("/home/settings");
 }
 
-export type TSelectCategory = typeof categories.$inferSelect;
+export type TCategory = typeof categories.$inferSelect;
 export type TInsertCategory = typeof categories.$inferInsert;
 export type TUpdateCategory = Omit<typeof categories.$inferSelect, "createdAt" | "userId">;

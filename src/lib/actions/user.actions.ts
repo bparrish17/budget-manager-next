@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { createUser, getUserByEmail } from "@/lib/services/user.service";
 
 const registerSchema = z.object({
@@ -81,5 +81,9 @@ export async function register(prevState: RegisterFormState, formData: FormData)
   }
 
   revalidatePath("/");
-  redirect("/");
+  redirect("/home");
+}
+
+export async function onSignOut() {
+  await signOut({ redirectTo: "/login" });
 }

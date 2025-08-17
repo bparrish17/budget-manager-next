@@ -38,7 +38,7 @@ import {
   createCategory,
   updateCategory,
   TInsertCategory,
-  TSelectCategory,
+  TCategory,
   TUpdateCategory,
 } from "@/lib/services/category.service";
 
@@ -71,7 +71,7 @@ type TCategoryFormDialogProps = {
   categoryId?: number;
   defaultValues: Partial<TCreateUpdateCategory>;
   children: React.ReactNode;
-  categories: TSelectCategory[];
+  categories: TCategory[];
   onConfirm?: () => void;
 };
 
