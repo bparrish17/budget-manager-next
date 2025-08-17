@@ -2,7 +2,8 @@
 
 import db from "@/db";
 import { transactions } from "@/db/schema";
-import { gt, lt } from "drizzle-orm";
+import { and, eq, gt, lt } from "drizzle-orm";
+import { getUserId } from "./db.service";
 
 export async function searchTransactions() {
   return db.query.transactions.findMany({
@@ -13,11 +14,12 @@ export async function searchTransactions() {
 }
 
 export async function searchExpenses() {
+  const userId = await getUserId();
   return db.query.transactions.findMany({
     with: {
       category: true,
     },
-    where: lt(transactions.amount, 0),
+    where: and(eq(transactions.userId, userId), lt(transactions.amount, 0)),
     limit: 10,
   });
 }

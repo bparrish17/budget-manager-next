@@ -1,17 +1,17 @@
 "use server";
 
-import { auth } from "@/auth";
 import db from "@/db";
 import { categories } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { insertWithUserId, whereUserId } from "./db.service";
 
 export async function fetchCategories() {
-  return db.select().from(categories);
+  return whereUserId(db.select().from(categories).$dynamic(), categories.userId);
 }
 
 export async function createCategory(category: TInsertCategory) {
-  await db.insert(categories).values(category);
+  await insertWithUserId<typeof categories, TInsertCategory>(categories, category);
   revalidatePath("/home/settings");
 }
 
