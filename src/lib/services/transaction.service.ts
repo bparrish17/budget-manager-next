@@ -18,6 +18,7 @@ export async function searchExpenses() {
       category: true,
     },
     where: lt(transactions.amount, 0),
+    limit: 10,
   });
 }
 

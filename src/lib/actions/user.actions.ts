@@ -24,12 +24,8 @@ const registerSchema = z.object({
     .min(1, "Confirm Password is required"),
 });
 
-export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData
-) {
+export async function authenticate(prevState: string | undefined, formData: FormData) {
   try {
-    console.log("formData", formData);
     await signIn("credentials", formData);
   } catch (error) {
     if (error instanceof AuthError) {
@@ -55,10 +51,7 @@ export type RegisterFormState = {
   message?: string | null;
 };
 
-export async function register(
-  prevState: RegisterFormState,
-  formData: FormData
-) {
+export async function register(prevState: RegisterFormState, formData: FormData) {
   try {
     const validatedFields = registerSchema.safeParse({
       email: formData.get("email"),
@@ -68,7 +61,6 @@ export async function register(
 
     // If form validation fails, return errors early. Otherwise, continue.
     if (!validatedFields.success) {
-      console.log("validated", validatedFields.error);
       return {
         errors: validatedFields.error.flatten().fieldErrors,
         message: "Missing Fields.",

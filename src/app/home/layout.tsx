@@ -1,11 +1,8 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/sidebar";
+import { NextFileProps } from "@/lib/types";
 
-export default function HomeLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function HomeLayout({ children }: NextFileProps) {
   return (
     <SidebarProvider>
       <AppSidebar />

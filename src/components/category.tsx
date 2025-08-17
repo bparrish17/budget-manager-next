@@ -1,13 +1,14 @@
 "use client";
 
+import { Edit, TrashIcon } from "lucide-react";
+import { useState } from "react";
+
+import { categories } from "@/db/schema";
+import { deleteCategory } from "@/lib/services/category.service";
 import { categoryColorMap } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import { Edit, TrashIcon } from "lucide-react";
-import { categories } from "@/db/schema";
-import { useState } from "react";
-import { AppAlertDialog } from "./alert-dialog";
-import { deleteCategory, updateCategory } from "@/lib/services/category.service";
-import { CategoryFormDialog, UpdateCategorySchema } from "./category-form-dialog";
+import { AppAlertDialog } from "@/components/alert-dialog";
+import { CategoryFormDialog } from "@/components/category-form-dialog";
 
 export function Category({ category }: { category: typeof categories.$inferSelect }) {
   const [isHovering, setIsHovering] = useState<boolean>();

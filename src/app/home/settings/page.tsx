@@ -26,7 +26,7 @@ export default async function Settings() {
   */
 
   return (
-    <div className="flex flex-col gap-4 w-full px-8 pt-6 items-center sm:items-start">
+    <>
       <h4 className="text-2xl">Settings</h4>
       <Separator />
       {/* categories */}
@@ -72,6 +72,6 @@ export default async function Settings() {
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }

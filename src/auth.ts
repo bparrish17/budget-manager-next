@@ -4,6 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { getUserByEmail } from "@/lib/services/user.service";
+import { set } from "lodash";
 
 const signInSchema = z.object({
   email: z
@@ -19,6 +20,12 @@ const signInSchema = z.object({
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
+  callbacks: {
+    session: async ({ session, token }) => {
+      set(session.user, "id", token.sub);
+      return session;
+    },
+  },
   providers: [
     Credentials({
       credentials: {
@@ -33,10 +40,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
             const { email, password } = parsedCredentials.data;
             const user = await getUserByEmail(email);
             if (!user) return null;
-            const passwordsMatch = await bcrypt.compare(
-              password,
-              user.password
-            );
+            const passwordsMatch = await bcrypt.compare(password, user.password);
 
             if (passwordsMatch) return user;
           }
