@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { categories } from "@/db/schema";
 import { deleteCategory } from "@/lib/services/category.service";
-import { categoryColorMap } from "@/lib/constants";
+import { categoryBgColorMap } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { AppAlertDialog } from "@/components/alert-dialog";
 import { CategoryFormDialog } from "@/components/category-form-dialog";
@@ -59,7 +59,7 @@ export function Category({ category }: { category: typeof categories.$inferSelec
         </>
       )}
       <div
-        className={`w-full h-3 ${categoryColorMap[category.color ?? "amber"]} rounded-t-[7px]`}
+        className={`w-full h-3 ${categoryBgColorMap[category.color ?? "amber"]} rounded-t-[7px]`}
       />
       <div className="px-6 pb-3 pt-0 text-center">
         <span className="text-sm font-semibold">{category.title}</span>

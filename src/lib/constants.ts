@@ -1,4 +1,4 @@
-export const categoryColorMap: { [color: string]: string } = {
+export const categoryBgColorMap: { [color: string]: string } = {
   red: "bg-red-400",
   orange: "bg-orange-400",
   amber: "bg-amber-400",
@@ -22,4 +22,30 @@ export const categoryColorMap: { [color: string]: string } = {
   neutral: "bg-neutral-400",
   stone: "bg-stone-400",
   black: "bg-black",
+};
+
+export const categoryTextColorMap: { [color: string]: string } = {
+  red: "text-primary-foreground",
+  orange: "text-secondary-foreground",
+  amber: "text-secondary-foreground",
+  yellow: "text-secondary-foreground",
+  lime: "text-secondary-foreground",
+  green: "text-secondary-foreground",
+  emerald: "text-secondary-foreground",
+  teal: "text-secondary-foreground",
+  cyan: "text-secondary-foreground",
+  sky: "text-secondary-foreground",
+  blue: "text-primary-foreground",
+  indigo: "text-primary-foreground",
+  violet: "text-primary-foreground",
+  purple: "text-primary-foreground",
+  fuchsia: "text-secondary-foreground",
+  pink: "text-secondary-foreground",
+  rose: "text-primary-foreground",
+  slate: "text-secondary-foreground",
+  gray: "text-primary-foreground",
+  zinc: "text-secondary-foreground",
+  neutral: "text-secondary-foreground",
+  stone: "text-primary-foreground",
+  black: "text-primary-foreground",
 };

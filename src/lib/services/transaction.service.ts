@@ -2,8 +2,17 @@
 
 import db from "@/db";
 import { categories, transactions } from "@/db/schema";
-import { and, eq, gt, lt } from "drizzle-orm";
+import { and, asc, eq, gt, gte, lt, lte } from "drizzle-orm";
 import { getUserId, whereUserId, withPagination } from "./db.service";
+
+function getExpenseFilters(userId: string) {
+  return and(
+    eq(transactions.userId, userId),
+    lt(transactions.amount, 0),
+    gte(transactions.date, "2025-01-01"),
+    lte(transactions.date, "2025-12-31")
+  );
+}
 
 export async function searchTransactions() {
   return db.query.transactions.findMany({
@@ -13,7 +22,21 @@ export async function searchTransactions() {
   });
 }
 
-export async function searchExpenses() {
+interface PageProps {
+  page: number;
+  pageSize: number;
+}
+
+export async function getExpensesCount(pageSize: number) {
+  const userId = await getUserId();
+  const total = await db.$count(transactions, getExpenseFilters(userId));
+  return {
+    total: total,
+    pages: Math.ceil(total / pageSize),
+  };
+}
+
+export async function searchExpenses({ page, pageSize }: PageProps) {
   const userId = await getUserId();
   const query = db
     .select({
@@ -28,11 +51,12 @@ export async function searchExpenses() {
       },
     })
     .from(transactions)
-    .where(and(eq(transactions.userId, userId), lt(transactions.amount, 0)))
+    .orderBy(asc(transactions.date))
+    .where(getExpenseFilters(userId))
     .fullJoin(categories, eq(transactions.categoryId, categories.id))
     .$dynamic();
 
-  return withPagination(query, 1, 50);
+  return withPagination(query, page, pageSize);
 
   // return db.query.transactions.findMany({
   //   with: {

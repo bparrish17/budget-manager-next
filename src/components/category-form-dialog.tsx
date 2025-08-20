@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { categories, color as ColorSchema } from "@/db/schema";
-import { categoryColorMap } from "@/lib/constants";
+import { categoryBgColorMap } from "@/lib/constants";
 import { Textarea } from "@/components/ui/textarea";
 import {
   createCategory,
@@ -151,7 +151,7 @@ export function CategoryFormDialog({
                         {colorOptions.map((colorOption) => (
                           <SelectItem key={colorOption} value={colorOption}>
                             <div
-                              className={`${categoryColorMap[colorOption]} w-3 h-3 rounded-full`}
+                              className={`${categoryBgColorMap[colorOption]} w-3 h-3 rounded-full`}
                             />
                             {capitalize(colorOption)}
                           </SelectItem>
