@@ -10,6 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { generatePagination } from "@/lib/utils";
+import clsx from "clsx";
 import { usePathname, useSearchParams } from "next/navigation";
 
 export default function AppPagination({ totalPages }: { totalPages: number }) {
@@ -17,7 +18,6 @@ export default function AppPagination({ totalPages }: { totalPages: number }) {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
   const allPages = generatePagination(currentPage, totalPages);
-  console.log("allPages", allPages);
 
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
@@ -29,17 +29,15 @@ export default function AppPagination({ totalPages }: { totalPages: number }) {
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious href={createPageURL(currentPage - 1)} className="font-normal" />
+          <PaginationPrevious
+            href={createPageURL(currentPage - 1)}
+            className={clsx("font-normal", currentPage === 1 ? "disabled" : null)}
+          />
         </PaginationItem>
         {allPages.map((page, index) => {
-          let position: "first" | "last" | "single" | "middle" | undefined;
-
-          if (index === 0) position = "first";
-          if (index === allPages.length - 1) position = "last";
-          if (allPages.length === 1) position = "single";
           if (page === "...") {
             return (
-              <PaginationItem key={page}>
+              <PaginationItem key={`${page}-${index}`}>
                 <PaginationEllipsis />
               </PaginationItem>
             );
@@ -54,7 +52,10 @@ export default function AppPagination({ totalPages }: { totalPages: number }) {
           );
         })}
         <PaginationItem>
-          <PaginationNext href={createPageURL(currentPage + 1)} className="font-normal" />
+          <PaginationNext
+            href={createPageURL(currentPage + 1)}
+            className={clsx("font-normal", currentPage === totalPages ? "disabled" : null)}
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

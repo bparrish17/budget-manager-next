@@ -14,7 +14,13 @@ export function formatTransactionDate(dateStr: string) {
   return `${m}/${d}/${year}`;
 }
 
+export function formatAmount(value: number, isExpense: boolean) {
+  const dividend = isExpense ? -100 : 100;
+  return `$${(value / dividend).toFixed(2)}`;
+}
+
 export function generatePagination(currentPage: number, totalPages: number) {
+  console.log(currentPage, totalPages);
   // If the total number of pages is 7 or less,
   // display all pages without any ellipsis.
   if (totalPages <= 7) {

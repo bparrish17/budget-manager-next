@@ -25,13 +25,15 @@ export function PageSizeSelect({ pageSize }: { pageSize: number }) {
 
   return (
     <Select value={pageSize.toString()} onValueChange={onPageSizeSelect}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-32">
         <SelectValue placeholder="" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           {options.map((opt) => (
-            <SelectItem value={opt.toString()}>Show {opt}</SelectItem>
+            <SelectItem key={opt} value={opt.toString()}>
+              Show {opt}
+            </SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>
