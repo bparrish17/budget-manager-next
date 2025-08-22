@@ -3,6 +3,8 @@ import { ExpensesTable } from "./table";
 import { columns } from "./columns";
 import AppPagination from "@/components/pagination";
 import { PageSizeSelect } from "@/components/page-size-select";
+import { TransactionQuickFilters } from "@/components/transaction-quick-filters";
+import Search from "@/components/search";
 
 export default async function Expenses(props: {
   params: Promise<{ year: string }>;
@@ -18,6 +20,10 @@ export default async function Expenses(props: {
   return (
     <>
       <h4 className="text-2xl">Expenses</h4>
+      <div className="w-full flex justify-between gap-8">
+        <Search placeholder="Search expenses" />
+        <TransactionQuickFilters />
+      </div>
       <ExpensesTable columns={columns} data={expenses as any} />
       <div className="w-full flex items-center justify-between">
         <div className="min-w-fit text-sm text-slate-500">{`${counts.total} Expenses`}</div>

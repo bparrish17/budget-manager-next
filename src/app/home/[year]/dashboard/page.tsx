@@ -11,11 +11,13 @@ export default async function Dashboard(props: {
   return (
     <>
       <h4 className="text-2xl">Dashboard</h4>
-      <MonthlyBarChart
-        title="Monthly Totals"
-        description="January - June 2025"
-        data={monthTotals}
-      />
+      <div className="py-6 px-4 flex flex-wrap">
+        <MonthlyBarChart
+          title="Monthly Totals"
+          description="January - June 2025"
+          data={monthTotals}
+        />
+      </div>
     </>
   );
 }

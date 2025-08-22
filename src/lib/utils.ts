@@ -1,4 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
+import { debounce } from "lodash";
+import { useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -19,8 +21,18 @@ export function formatAmount(value: number, isExpense: boolean) {
   return `$${(value / dividend).toFixed(2)}`;
 }
 
+export const useDebouncedCallback = (cb: Function, wait = 300) => {
+  const debouncePropChange = useCallback(
+    debounce((...args) => {
+      cb(...args);
+    }, wait),
+    []
+  );
+
+  return debouncePropChange;
+};
+
 export function generatePagination(currentPage: number, totalPages: number) {
-  console.log(currentPage, totalPages);
   // If the total number of pages is 7 or less,
   // display all pages without any ellipsis.
   if (totalPages <= 7) {

@@ -72,7 +72,6 @@ export async function getMonthlyTotals(year: string) {
   const userId = await getUserId();
 
   const fetchSumForMonth = async (month: number) => {
-    console.log("fetching month", month, userId);
     const dayPlaceholder = new Date(Number(year), month, 5);
     const monthLabel = format(dayPlaceholder, "MMMM");
 

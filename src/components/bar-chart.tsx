@@ -20,15 +20,6 @@ import {
 
 export const description = "A bar chart with a label";
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
-
 const chartConfig = {
   desktop: {
     label: "Desktop",
@@ -43,7 +34,6 @@ interface MonthlyBarChartProps {
 }
 
 export function MonthlyBarChart({ title, description, data }: MonthlyBarChartProps) {
-  console.log("DATA: ", data);
   return (
     <Card className="w-full">
       <CardHeader>
@@ -55,13 +45,7 @@ export function MonthlyBarChart({ title, description, data }: MonthlyBarChartPro
           config={chartConfig}
           style={{ minWidth: "800px", width: "100%", height: "350px" }}
         >
-          <BarChart
-            accessibilityLayer
-            data={data}
-            margin={{
-              top: 20,
-            }}
-          >
+          <BarChart accessibilityLayer data={data} margin={{ top: 20 }}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="label"
